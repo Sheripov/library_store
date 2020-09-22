@@ -1,0 +1,12 @@
+{% extends 'books/base_v1.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div class="card bg-light my-4 p-4 text-center">
+        <p>Are you sure you want to delete "{{ object }}"?</p>
+        <input type="submit" value="Confirm"/>
+    </div>
+</form>
+
+{% endblock %}
