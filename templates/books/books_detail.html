@@ -13,37 +13,13 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
                 {% if perms.library.change_projectemail %}
-                <form action="{% url 'book-update' book_detail.id %}" target="_blank">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                </form>
+                <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'book-update' book_detail.id %}">Edit</a>
                 {% endif %}
                 {% if perms.library.delete_invoicetype %}
-                <form action="{% url 'book-delete' book_detail.id %}" target="_blank">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </form>
+                <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'book-delete' book_detail.id %}">Delete</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-<!--<div class="card mb-4 shadow-sm">-->
-<!--    <h1 class="display-3"> {{book_detail.title}}</h1>-->
-<!--    <h2 style="color:gray; font-size:15px"> {{book_detail.author_name}}</h2>-->
-<!--    <hr class="my-4">-->
-<!--    <p class="lead"> {{book_detail.description}}</p>-->
-<!--    <hr class="my-4">-->
-<!--    {% if perms.library.change_projectemail %}-->
-<!--        <a class="button" href="{% url 'book-update' book_detail.id %}">Изменить</a>-->
-<!--        {% if perms.library.delete_invoicetype %}-->
-<!--            <a href="{% url 'book-delete' book_detail.id %}">Удалить</a>-->
-<!--        {% endif %}-->
-<!--    {% endif %}-->
-<!--</div>-->
 {% endblock %}

@@ -10,12 +10,12 @@
                     <p class="card-text">{{ el.title }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='{{ el.get_absolute_url }}'">View</button>
+                            <a type="button" class="btn btn-sm btn-outline-secondary" href="{{ el.get_absolute_url }}">View</a>
                             {% if perms.library.change_projectemail %}
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='{% url 'book-update' el.id %}'">Edit</button>
+                            <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'book-update' el.id %}">Edit</a>
                             {% endif %}
                             {% if perms.library.delete_invoicetype %}
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='{% url 'book-delete' el.id %}'">Delete</button>
+                            <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'book-delete' el.id %}">Delete</a>
                             {% endif %}
                         </div>
                     </div>
