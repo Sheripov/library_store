@@ -24,6 +24,7 @@ class BookListAPIViewTest(APITestCase):
         self.assertEqual(serializer_data, response.data)
 
 
+
 class BookDetailAPIViewTest(APITestCase):
     def test_get_book_details(self):
         book_1 = Books.objects.create(

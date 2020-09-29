@@ -33,3 +33,5 @@ class BookSerializersTestCase(TestCase):
 
         ]
         self.assertEqual(expected_data, data)
+        print(expected_data)
+        print(data)

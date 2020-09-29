@@ -1,5 +1,5 @@
 {% extends 'books/base_v1.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}
 Подробно
 {% endblock %}
@@ -20,6 +20,71 @@
                 {% endif %}
             </div>
         </div>
+<h6>Comments:</h6>
+                  {% if request.user.is_authenticated %}
+                      <form action="" method="post">
+                          <input type="hidden" id="article" data-id="{{ book_detail.pk }}">
+                          {% csrf_token %}
+                          {{ form|crispy }}
+                          <input type="submit" value="Post" id="add_comment">
+                      </form>
+                  {% else %}
+                      <h2 class="alert alert-info">If you want to add comments, you must be registered</h2>
+                  {% endif %}
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+        $('#add_comment').on('click', function (e) {
+            e.preventDefault();
+            {% if request.user.is_authenticated %}
+            var article_id = $('#article').attr('data-id');
+            var comment = $('#id_comment').val();
+
+            data = {
+                article_id: article_id,
+                comment: comment,
+                csrfmiddlewaretoken: csrftoken
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'add-comment' %}",
+                data: data,
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (field) {
+                        $('.comments').prepend(`<div class="col-sm-12"><hr>`+
+                        `<div class="d-flex justify-content-between bd-highlight mb-3">`+
+                        `<div class="p-2 bd-highlight"><small>`+data[field]['author']+`</small><p>`+data[field]['comment']+
+                        `</p><small>`+data[field]['timestamp']+`</small>`+
+                        `</p><small>`+data[field]['timestamp']+`</small></div>`+
+                        `</div></div>`);
+                        $('#id_comment').val('');
+                    })
+                }
+            });
+            {% endif %}
+            });
+        })
+    </script>
+
+
 {% endblock %}

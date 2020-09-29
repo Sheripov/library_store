@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from .views import BookCreate, BookDelete, BookUpdate, BookListView, BookDetailView
+from .views import BookCreate, BookDelete, BookUpdate, BookListView, BookDetailView, CommentSavingView
 
 urlpatterns = [
     path('', BookListView.as_view(), name='book-list'),
@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'add_book/$', BookCreate.as_view(), name='book-add'),
     url(r'book/(?P<pk>[0-9]+)/$', BookUpdate.as_view(), name='book-update'),
     url(r'book/(?P<pk>[0-9]+)/delete/$', BookDelete.as_view(), name='book-delete'),
+    path("add_comment/", CommentSavingView.as_view(), name="add-comment"),
 ]
