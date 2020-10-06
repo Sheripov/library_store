@@ -2,7 +2,7 @@ version: '2'
 
 
 services:
-    web:
+    web_library:
       restart: always
       build:
         context: .
@@ -10,21 +10,24 @@ services:
           requirements: requirements/development.txt
       command: >
         bash -c "python3 manage.py migrate
-        && python3 manage.py runserver 0.0.0.0:8000"
+        && python3 manage.py runserver 0.0.0.0:8001"
       ports:
-       - '8000:8000'
+       - '8001:8001'
       depends_on:
-       - db
+       - db_library
       volumes:
        - .:/code
       environment:
        - DJANGO_SETTINGS_MODULE=library.settings.dev
 
-    db:
+    db_library:
       restart: always
       image: 'postgres:latest'
       expose:
-        - "5432"
+        - "5433"
+      ports:
+        - "5433:5433"
+      command: -p 5433
       environment:
         POSTGRES_PASSWORD: password
         POSTGRES_DB: postgres
