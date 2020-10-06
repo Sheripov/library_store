@@ -5,7 +5,6 @@
 {% endblock %}
 {% block content %}
 <div class="card mb-4 shadow-sm">
-
     <div class="card-body">
         <img style="border-radius: 8px;display:block;margin-left: auto;margin-right: auto;width: 50%;" src="{{ book_detail.title_img }}">
         <p style="margin:auto;width: 50%;" class="card-text">{{ book_detail.title }}</p>
@@ -24,27 +23,36 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="bs-component"></div>
-        <form>
-            <fieldset>
-                {% load static %}
-                {% csrf_token %}
-                <script src="{% static 'app.js' %}"></script>
-                <script>renderComments("{{ book_detail.id }}")</script>
-                <div class="form-group">
-                    <label for="comment">Send comment</label>
-                    <textarea class="form-control" type="text" id="comment" rows="5"></textarea>
-                    <input type="hidden" id="book_id" value="{{ book_detail.id }}">
-                    <input type="hidden" id="user_id" value="{{ user.id }}">
-                    <input type="hidden" id="post_url" value="/api/book_comments/">
+        <div class="bs-component">
+            <form>
+                <fieldset>
+                    {% load static %}
+                    {% csrf_token %}
+                    <script src="{% static 'app.js' %}"></script>
+                    <script>renderComments("{{ book_detail.id }}")</script>
+                    {% if request.user.is_authenticated %}
+                    <div class="form-group">
+                        <label for="comment">Send comment</label>
+                        <textarea class="form-control" type="text" id="comment" rows="5"></textarea>
+                        <input type="hidden" id="book_id" value="{{ book_detail.id }}">
+                        <input type="hidden" id="user_id" value="{{ user.id }}">
+                        <input type="hidden" id="post_url" value="/api/book_comments/">
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-secondary" type="button" value="Send" onclick="javaScript:myComment()">
+                    </div>
+                    {% else %}
+                        <h5>You need to login to write comments</h5>
+                        <a style="color: black" class="btn btn-success" href="{% url 'book-list' %}admin/login">Войти</a>
+                    {% endif %}
+                </fieldset>
+                <br>
+                <label for="comments">Comments</label>
+                <div id="comments" class="container">
+                <div class="comments"></div>
                 </div>
-                <div class="form-group">
-                    <input class="btn btn-secondary" type="button" value="Send" onclick="javaScript:myComment()">
-                </div>
-                </div>
-            </fieldset>
-            <ul  class="comments"></ul>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
