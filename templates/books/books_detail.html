@@ -5,11 +5,13 @@
 {% endblock %}
 {% block content %}
 <div class="card mb-4 shadow-sm">
-    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+
     <div class="card-body">
-        <p class="card-text">{{book_detail.title}}</p>
-        <p class="card-text">{{book_detail.author_name}}</p>
-        <p class="card-text">{{book_detail.description}}</p>
+        <img style="border-radius: 8px;display:block;margin-left: auto;margin-right: auto;width: 50%;" src="{{ book_detail.title_img }}">
+        <p style="margin:auto;width: 50%;" class="card-text">{{ book_detail.title }}</p>
+        <p style="margin:auto;width: 50%;" class="card-text">{{ book_detail.author_name }}</p>
+        <br>
+        <p class="card-text">{{ book_detail.description }}</p>
         <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
                 {% if perms.library.change_projectemail %}
@@ -20,71 +22,29 @@
                 {% endif %}
             </div>
         </div>
-<h6>Comments:</h6>
-                  {% if request.user.is_authenticated %}
-                      <form action="" method="post">
-                          <input type="hidden" id="article" data-id="{{ book_detail.pk }}">
-                          {% csrf_token %}
-                          {{ form|crispy }}
-                          <input type="submit" value="Post" id="add_comment">
-                      </form>
-                  {% else %}
-                      <h2 class="alert alert-info">If you want to add comments, you must be registered</h2>
-                  {% endif %}
+    </div>
+    <div class="col-lg-6">
+        <div class="bs-component"></div>
+        <form>
+            <fieldset>
+                {% load static %}
+                {% csrf_token %}
+                <script src="{% static 'app.js' %}"></script>
+                <script>renderComments("{{ book_detail.id }}")</script>
+                <div class="form-group">
+                    <label for="comment">Send comment</label>
+                    <textarea class="form-control" type="text" id="comment" rows="5"></textarea>
+                    <input type="hidden" id="book_id" value="{{ book_detail.id }}">
+                    <input type="hidden" id="user_id" value="{{ user.id }}">
+                    <input type="hidden" id="post_url" value="/api/book_comments/">
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-secondary" type="button" value="Start" onclick="javaScript:myComment()">
+                </div>
+                </div>
+            </fieldset>
+            <ul  class="comments"></ul>
+        </form>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
-        $('#add_comment').on('click', function (e) {
-            e.preventDefault();
-            {% if request.user.is_authenticated %}
-            var article_id = $('#article').attr('data-id');
-            var comment = $('#id_comment').val();
-
-            data = {
-                article_id: article_id,
-                comment: comment,
-                csrfmiddlewaretoken: csrftoken
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "{% url 'add-comment' %}",
-                data: data,
-                dataType: 'json',
-                success: function (data) {
-                    $.each(data, function (field) {
-                        $('.comments').prepend(`<div class="col-sm-12"><hr>`+
-                        `<div class="d-flex justify-content-between bd-highlight mb-3">`+
-                        `<div class="p-2 bd-highlight"><small>`+data[field]['author']+`</small><p>`+data[field]['comment']+
-                        `</p><small>`+data[field]['timestamp']+`</small>`+
-                        `</p><small>`+data[field]['timestamp']+`</small></div>`+
-                        `</div></div>`);
-                        $('#id_comment').val('');
-                    })
-                }
-            });
-            {% endif %}
-            });
-        })
-    </script>
-
-
 {% endblock %}

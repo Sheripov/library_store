@@ -1,16 +1,13 @@
-from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-
-import library
 
 
 class Books(models.Model):
     title = models.CharField('Название', max_length=50)
     author_name = models.CharField('Имя автора', max_length=50)
     description = models.TextField('Описание')
+    title_img = models.URLField('Фото обложки')
 
     def get_absolute_url(self):
         return reverse('book-detail', args=[self.id])
@@ -27,14 +24,7 @@ class Books(models.Model):
         verbose_name_plural = "Книги"
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-
-    def __str__(self):
-        return "{0}/{1}".format(self.author.username, self.content[:10])
+class BookComments(models.Model):
+    comment = models.TextField("Конментарий")
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

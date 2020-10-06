@@ -6,7 +6,7 @@ from .models import Books
 class BookForm(ModelForm):
     class Meta:
         model = Books
-        fields = ['title', 'author_name', 'description']
+        fields = ['title', 'author_name', 'description', 'title_img']
 
 
 class CommentForm(forms.Form):
