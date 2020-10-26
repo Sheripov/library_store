@@ -67,8 +67,9 @@ class FileFieldView(FormView):
                         paragraphs.append(''.join(texts))
                 title = paragraphs[0]
                 author_name = paragraphs[1]
-                description = paragraphs[2]
-                title_img = paragraphs[3]
+                title_img = paragraphs[2]
+                description = '<br>'.join(paragraphs[3::])
+
                 Books.objects.create(
                     title=title,
                     author_name=author_name,

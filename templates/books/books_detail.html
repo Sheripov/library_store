@@ -10,7 +10,7 @@
         <p style="margin:auto;width: 50%;" class="card-text">{{ book_detail.title }}</p>
         <p style="margin:auto;width: 50%;" class="card-text">{{ book_detail.author_name }}</p>
         <br>
-        <p class="card-text">{{ book_detail.description }}</p>
+        <p class="card-text">{{ book_detail.description|safe }}</p>
         <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
                 {% if perms.library.change_projectemail %}

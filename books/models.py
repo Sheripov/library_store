@@ -4,8 +4,8 @@ from django.urls import reverse
 
 
 class Books(models.Model):
-    title = models.CharField('Название', max_length=50)
-    author_name = models.CharField('Имя автора', max_length=50)
+    title = models.CharField('Название', max_length=200)
+    author_name = models.CharField('Имя автора', max_length=100)
     description = models.TextField('Описание')
     title_img = models.URLField('Фото обложки')
 
