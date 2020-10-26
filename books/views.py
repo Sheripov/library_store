@@ -5,7 +5,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 
 from .forms import FileFieldForm
 from .models import Books
-from docx import Document
 
 
 class BookCreate(PermissionRequiredMixin, CreateView):
@@ -48,11 +47,28 @@ class FileFieldView(FormView):
         files = request.FILES.getlist('file_field')
         if form.is_valid():
             for f in files:
-                document = Document(f)
-                title = document.paragraphs[0].text
-                author_name = document.paragraphs[1].text
-                description = document.paragraphs[2].text
-                title_img = document.paragraphs[3].text
+                import zipfile
+                doc = zipfile.ZipFile(f)
+                xml_content = doc.read('word/document.xml')
+                try:
+                    from xml.etree.cElementTree import XML
+                except ImportError:
+                    from xml.etree.ElementTree import XML
+                tree = XML(xml_content)
+                paragraphs = []
+                WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+                PARA = WORD_NAMESPACE + 'p'
+                TEXT = WORD_NAMESPACE + 't'
+                for paragraph in tree.iter(PARA):
+                    texts = [node.text
+                             for node in paragraph.iter(TEXT)
+                             if node.text]
+                    if texts:
+                        paragraphs.append(''.join(texts))
+                title = paragraphs[0]
+                author_name = paragraphs[1]
+                description = paragraphs[2]
+                title_img = paragraphs[3]
                 Books.objects.create(
                     title=title,
                     author_name=author_name,
