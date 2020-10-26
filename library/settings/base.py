@@ -29,6 +29,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
+LOGIN_REDIRECT_URL = '/'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'api',
     'crispy_forms',
     'django_filters',
+    'users',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [

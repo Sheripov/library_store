@@ -1,5 +1,3 @@
-import os
-
 from library.settings.base import *
 
 BASE_DIR = os.path.join(

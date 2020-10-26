@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Подробно
+{% endblock %}
+{% block content %}
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <p style="margin:auto;width: 50%;" class="card-text">User name: {{ user_detail.username }}</p>
+        <p style="margin:auto;width: 50%;" class="card-text">First name: {{ user_detail.first_name }}</p>
+        <p style="margin:auto;width: 50%;" class="card-text">Last name: {{ user_detail.last_name }}</p>
+        <p style="margin:auto;width: 50%;" class="card-text">Email: {{ user_detail.email }}</p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                <a type="button" class="btn btn-sm btn-outline-secondary" href="{% url 'profile_update' %}">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

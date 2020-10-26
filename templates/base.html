@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>Book store example · Bootstrap</title>
+    <title>{% block title %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -38,29 +38,32 @@
             <div class="row">
                 <div class="col-sm-8 col-md-7 py-4">
                     <h4 class="text-white">About</h4>
-                    <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+                    <p class="text-muted">My name is Farruh and this is my site. In this site I would like to demonstrate
+                    an example of using Fetch API, REST API, CBV and User CRUD interface.</p>
                 </div>
                 <div class="col-sm-4 offset-md-1 py-4">
                     <h4 class="text-white">Contact</h4>
                     <ul class="list-unstyled">
-                    <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                    <li><a href="#" class="text-white">Like on Facebook</a></li>
-                    <li><a href="#" class="text-white">Email me</a></li>
+                    <li><a href="https://www.linkedin.com/in/farruh-sheripov-39ba481b0/" class="text-white">Follow on LinkedIn</a></li>
+                    <li><a href="https://t.me/farruhsheripov" class="text-white">Telegram</a></li>
+                    <li><a href="mailto:sheripov.farruh@gmail.com" class="text-white">Email me</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-8 col-md-7 py-4">
                     <h4 class="text-white">Authorization</h4>
                     {% if request.user.is_authenticated %}
-                        <a style="color: black" class="btn btn-danger" href="{% url 'book-list' %}admin/logout">Выйти</a>
+                        <a style="color: black" class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                        <a style="color: black" class="btn btn-danger" href="{% url 'profile-detail' %}">Profile</a>
                     {% else %}
-                        <a style="color: black" class="btn btn-success" href="{% url 'book-list' %}admin/login">Войти</a>
+                        <a style="color: black" class="btn btn-success" href="{% url 'login' %}">Login</a>
+                        <a style="color: black" class="btn btn-success" href="{% url 'signup' %}">Signup</a>
                     {% endif %}
                 </div>
                 <div class="col-sm-8 col-md-7 py-4">
+                    {% if request.user.is_authenticated %}
                     <h4 class="text-white">Add book</h4>
-                    {% if perms.taskmanager.add_invoicetype %}
-                    <a class="btn btn-success" style="color: black" href="{% url 'book-add' %}">Добавить книгу</a>
-                    <a class="btn btn-success" style="color: black" href="{% url 'book-upload' %}">Загрузить книгу</a>
+                    <a class="btn btn-success" style="color: black" href="{% url 'book-add' %}">Create a book</a>
+                    <a class="btn btn-success" style="color: black" href="{% url 'book-upload' %}">Upload a book</a>
                     {% endif %}
                 </div>
             </div>
@@ -81,7 +84,6 @@
 
 
 <main role="main">
-    {% block section %}{% endblock %}
     <div class="book py-5 bg-light">
         <div class="container">
             {% block content %}{% endblock %}

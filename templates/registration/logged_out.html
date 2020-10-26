@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Logged out!
+{% endblock %}
+
+{% block content %}
+<div class="card bg-light my-4 p-4 text-center">
+    <p>Logged out!</p>
+    <a href="{% url 'login'%}">Click here to login again.</a>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-Добавление книги
+User update
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="card bg-light my-4 p-4 text-center">
             {% csrf_token %}
             {{ form|crispy }}
-            <button type="submit" class="btn btn-success">Добавить</button>
+            <button type="submit" class="btn btn-success">Update</button>
             <span>{{ error }}</span>
         </div>
     </form>

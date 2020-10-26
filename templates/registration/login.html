@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-Добавление книги
+Login
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,8 @@
         <div class="card bg-light my-4 p-4 text-center">
             {% csrf_token %}
             {{ form|crispy }}
-            <button type="submit" class="btn btn-success">Добавить</button>
+            <button type="submit" class="btn btn-success">Login</button>
+            <a href="{% url 'password_reset'%}">Click here if you forgot password.</a>
             <span>{{ error }}</span>
         </div>
     </form>
