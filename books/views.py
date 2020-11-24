@@ -1,10 +1,13 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AccessMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
-from .forms import FileFieldForm
-from .models import Books
+from .forms import FileFieldForm, SubscriptionForm
+from .models import *
+from .tasks import send_spam_email
 
 
 class BookCreate(LoginRequiredMixin, CreateView):
@@ -62,17 +65,36 @@ class FileFieldView(FormView):
                              if node.text]
                     if texts:
                         paragraphs.append(''.join(texts))
-                title = paragraphs[0]
-                author_name = paragraphs[1]
-                title_img = paragraphs[2]
-                description = '<br>'.join(paragraphs[3::])
+                try:
+                    title = paragraphs[0]
+                    author_name = paragraphs[1]
+                    title_img = paragraphs[2]
+                    description = '<br>'.join(paragraphs[3::])
 
-                Books.objects.create(
-                    title=title,
-                    author_name=author_name,
-                    description=description,
-                    title_img=title_img
-                )
+                    Books.objects.create(
+                        title=title,
+                        author_name=author_name,
+                        description=description,
+                        title_img=title_img
+                    )
+                except IntegrityError:
+                    print(f, 'SKIPPED')
+                    continue
+                except IndexError:
+                    return render(request, 'books/book_upload.html', {'error': f'{f} - Не соответствует шаблону'})
+
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class SubscriptionCreate(CreateView):
+    model = SubscriptionsUser
+    form_class = SubscriptionForm
+    success_url = '/'
+    template_name = 'registration/subscription_form.html'
+
+    def form_valid(self, form):
+        form.save()
+        send_spam_email.delay(form.instance.email)
+        return super().form_valid(form)

@@ -110,3 +110,7 @@ media/*
 
 /.postgres-data
 
+books/migrations/*
+celerybeat-schedule.db
+.DS_Store
+

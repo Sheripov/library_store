@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+subscription
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'subscription' %}" method="POST">
+        <div class="card bg-light my-4 p-4 text-center">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <button type="submit" class="btn btn-success">Добавить</button>
+            <span>{{ error }}</span>
+        </div>
+    </form>
+
+{% endblock %}

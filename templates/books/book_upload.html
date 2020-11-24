@@ -8,10 +8,15 @@
 {% block content %}
     <form enctype="multipart/form-data" method="POST">
         <div class="card bg-light my-4 p-4 text-center">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-success">Добавить</button>
-            <span>{{ error }}</span>
+            {% if error %}
+                <span>{{ error }}</span>
+                <a href="{% url 'book-upload' %}" class="btn btn-success">Повторить</a>
+            {% else %}
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success">Добавить</button>
+                <span>{{ error }}</span>
+            {% endif %}
         </div>
     </form>
     <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">

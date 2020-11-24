@@ -8,3 +8,6 @@ docker-compose.yml
 docker-compose.prod.yml
 !media/avatar/*
 media/*
+celerybeat-schedule.db
+.DS_Store
+books/migrations/*

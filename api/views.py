@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, Filter, FilterSet
 from rest_framework import viewsets, permissions
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
@@ -24,10 +24,13 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books to be viewed or edited.
     """
+
     queryset = Books.objects.all().order_by('-id')
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['id', ]
+    filter_fields = ['create_date']
 
     def get_paginated_response(self, data):
         return Response(data)

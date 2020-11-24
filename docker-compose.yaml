@@ -1,35 +1,82 @@
-version: '2'
+version: '3'
 
 
 services:
-    web_library:
-      restart: always
-      build:
-        context: .
-        args:
-          requirements: requirements/development.txt
-      command: >
-        bash -c "python3 manage.py migrate
-        && python3 manage.py runserver 0.0.0.0:8001"
-      ports:
-       - '8001:8001'
-      depends_on:
-       - db_library
-      volumes:
-       - .:/code
-      environment:
-       - DJANGO_SETTINGS_MODULE=library.settings.dev
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+  web:
+    restart: always
+    container_name: 'web_library'
+    build:
+      context: .
+      args:
+        requirements: requirements/development.txt
+    command: >
+      bash -c "python3 manage.py makemigrations && python3 manage.py migrate
+      && python3 manage.py runserver 0.0.0.0:8001"
+    ports:
+     - '8001:8001'
+    depends_on:
+     - db
+     - redis
+    volumes:
+     - .:/code
+    environment:
+     - DJANGO_SETTINGS_MODULE=library.settings.dev
 
-    db_library:
-      restart: always
-      image: 'postgres:latest'
-      expose:
-        - "5433"
-      ports:
-        - "5433:5433"
-      command: -p 5433
-      environment:
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: postgres
-      volumes:
-       - ./.postgres-data:/var/lib/postgresql/data
+  db:
+    restart: always
+    container_name: 'db_library'
+    image: 'postgres:alpine'
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+     - ./.postgres-data:/var/lib/postgresql/data
+
+  celery:
+    build:
+      context: .
+    container_name: 'celery'
+    command: celery -A library worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - web
+    environment:
+      - DJANGO_SETTINGS_MODULE=library.settings.dev
+  celery-beat:
+    build:
+      context: .
+    container_name: 'celery-beat'
+    command: celery -A library beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - web
+    environment:
+      - DJANGO_SETTINGS_MODULE=library.settings.dev
+
+  dashboard:
+    build: .
+    container_name: 'celery-dashboard'
+    command: flower -A library --port=5555 --broker=redis://redis:6379/0
+    ports:
+      - 5555:5555
+    environment:
+      - DJANGO_SETTINGS_MODULE=library.settings.dev
+    depends_on:
+      - web
+      - redis
+      - celery
