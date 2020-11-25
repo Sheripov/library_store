@@ -3,6 +3,7 @@ version: '3'
 
 services:
   redis:
+    restart: always
     image: 'redis:alpine'
     ports:
       - '6379:6379'
@@ -42,6 +43,7 @@ services:
      - ./.postgres-data:/var/lib/postgresql/data
 
   celery:
+    restart: always
     build:
       context: .
     container_name: 'celery'
@@ -55,6 +57,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=library.settings.dev
   celery-beat:
+    restart: always
     build:
       context: .
     container_name: 'celery-beat'
@@ -69,6 +72,7 @@ services:
       - DJANGO_SETTINGS_MODULE=library.settings.dev
 
   dashboard:
+    restart: always
     build: .
     container_name: 'celery-dashboard'
     command: flower -A library --port=5554 --broker=redis://redis:6379/0
