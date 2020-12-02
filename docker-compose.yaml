@@ -8,7 +8,8 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - redis:/data
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
   web:
     restart: always
     container_name: 'web_library'
