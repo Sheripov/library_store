@@ -25,6 +25,8 @@ services:
     depends_on:
      - db_library
      - redis
+    links:
+     - db_library:db_library
     environment:
      - DJANGO_SETTINGS_MODULE=library.settings.dev
 
