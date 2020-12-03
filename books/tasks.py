@@ -1,13 +1,12 @@
 from django.core.mail import send_mail
 from library.celery import app
 from .models import SubscriptionsUser, Books
-from .service import send, parsing_and_add_books
-
+from .service import Send, ParsingAndAddBooks
 
 
 @app.task
 def send_spam_email(user_email):
-    send(user_email)
+    Send(user_email)
 
 
 @app.task
@@ -24,4 +23,4 @@ def send_beat_email():
 
 @app.task
 def add_books_from_site():
-    parsing_and_add_books()
+    ParsingAndAddBooks()

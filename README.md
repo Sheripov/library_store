@@ -10,7 +10,7 @@ $ docker-compose up --build
 ```
 ### for bash commands in container
 ```sh
-$ docker exec -it <container_id_or_name> echo "I'm inside the container!"
+$ docker exec -it <container_id_or_name> bash
 ```
 
 
