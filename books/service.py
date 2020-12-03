@@ -41,22 +41,38 @@ class ParsingAndAddBooks:
                 books_url.append(url_book)
                 r_book = requests.get(url_book)
                 soup_book = bs4.BeautifulSoup(r_book.text, 'html.parser')
-                for img in soup_book.find_all('div', {'class': 'b-product-photo__picture-self'}):
-                    books_img.append(img.img.get('src'))
-                    books_title.append(img.img.get('title'))
-                    break
-                for author in soup_book.find_all('div', {'class': 'b-product-title__author'}):
-                    if author.a:
-                        books_author.append(author.find_all(string=self.is_the_only_string_within_a_tag))
-                    else:
-                        books_author.append(None)
-                for description in soup_book.find_all('div', {'class': 'b-description__sub'}):
-                    if description.p:
-                        books_description.append(description.find_all(string=self.is_the_only_string_within_a_tag))
-                        break
-                    else:
-                        books_description.append(None)
-        return books_url, books_img, books_title, books_author, books_description
+                tmp_img, tmp_title = self.get_img_and_title(soup_book)
+                books_img.append(tmp_img)
+                books_title.append(tmp_title)
+                books_author += self.get_author(soup_book)
+                books_description += self.get_description(soup_book)
+            return books_url, books_img, books_title, books_author, books_description
+
+    @staticmethod
+    def get_img_and_title(soup_book):
+        for img in soup_book.find_all('div', {'class': 'b-product-photo__picture-self'}):
+            books_img = img.img.get('src')
+            books_title = img.img.get('title')
+            return books_img, books_title
+
+    def get_author(self, soup_book) -> list:
+        books_author = []
+        for author in soup_book.find_all('div', {'class': 'b-product-title__author'}):
+            if author.a:
+                books_author.append(author.find_all(string=self.is_the_only_string_within_a_tag))
+            else:
+                books_author.append(None)
+        return books_author
+
+    def get_description(self, soup_book) -> list:
+        books_description = []
+        for description in soup_book.find_all('div', {'class': 'b-description__sub'}):
+            if description.p:
+                books_description.append(description.find_all(string=self.is_the_only_string_within_a_tag))
+                break
+            else:
+                books_description.append(None)
+        return books_description
 
     @staticmethod
     def join_only_no_null(list_: list) -> str:

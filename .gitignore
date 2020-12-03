@@ -108,9 +108,13 @@ venv.bak/
 !media/avatar/*
 media/*
 
-/.postgres-data
+.postgres-data
 
 books/migrations/*
 celerybeat-schedule.db
 .DS_Store
+
+# redis
+.redis.conf
+.redis-data
 
